@@ -28,3 +28,4 @@ build/
 Frontend copy/
 Frontend copy.zip
 app-old/
+*.db
