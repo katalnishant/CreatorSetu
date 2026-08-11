@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/useAuth'
 
 export default function Signup() {
   const navigate = useNavigate()
-  const { signup } = useAuth()
+  const { signup, loading } = useAuth()
   const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' })
   const [error, setError] = useState('')
 
@@ -13,7 +13,7 @@ export default function Signup() {
     setFormData((current) => ({ ...current, [name]: value }))
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     setError('')
 
@@ -27,13 +27,13 @@ export default function Signup() {
       return
     }
 
-    const result = signup(formData.name, formData.email, formData.password)
+    const result = await signup(formData.name, formData.email, formData.password)
     if (!result.success) {
       setError(result.message)
       return
     }
 
-    navigate('/discover')
+    navigate('/login')
   }
 
   return (
@@ -92,9 +92,10 @@ export default function Signup() {
 
           <button
             type="submit"
-            className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 px-6 py-3 text-sm font-semibold text-white"
+            disabled={loading}
+            className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 px-6 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
           >
-            Create account
+            {loading ? 'Creating account...' : 'Create account'}
           </button>
         </form>
 

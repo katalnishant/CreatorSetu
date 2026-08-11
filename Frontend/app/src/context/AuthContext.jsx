@@ -1,4 +1,5 @@
 import { createContext, useEffect, useMemo, useState } from 'react'
+import api from '../services/api'
 
 const AuthContext = createContext(null)
 
@@ -8,6 +9,8 @@ export function AuthProvider({ children }) {
     return storedUser ? JSON.parse(storedUser) : null
   })
 
+  const [loading, setLoading] = useState(false)
+
   useEffect(() => {
     if (currentUser) {
       localStorage.setItem('creatorSetuUser', JSON.stringify(currentUser))
@@ -16,40 +19,45 @@ export function AuthProvider({ children }) {
     }
   }, [currentUser])
 
-  const login = (email, password) => {
-    const storedUsers = JSON.parse(localStorage.getItem('creatorSetuUsers') || '[]')
-    const user = storedUsers.find((item) => item.email === email && item.password === password)
+  const login = async (email, password) => {
+    try {
+      setLoading(true)
+      const response = await api.post('/api/auth/login', { email, password })
+      const { token, user } = response.data
 
-    if (!user) {
-      return { success: false, message: 'Invalid email or password.' }
+      localStorage.setItem('token', token)
+      setCurrentUser(user)
+      return { success: true, message: 'Login successful.' }
+    } catch (error) {
+      const message = error?.response?.data?.message || 'Login failed.'
+      return { success: false, message }
+    } finally {
+      setLoading(false)
     }
-
-    setCurrentUser({ id: user.id, name: user.name, email: user.email })
-    return { success: true, message: 'Login successful.' }
   }
 
-  const signup = (name, email, password) => {
-    const storedUsers = JSON.parse(localStorage.getItem('creatorSetuUsers') || '[]')
-    const existingUser = storedUsers.find((item) => item.email === email)
-
-    if (existingUser) {
-      return { success: false, message: 'An account with this email already exists.' }
+  const signup = async (name, email, password) => {
+    try {
+      setLoading(true)
+      const response = await api.post('/api/auth/register', { name, email, password })
+      return { success: true, message: response.data.message || 'Signup successful.' }
+    } catch (error) {
+      const message = error?.response?.data?.message || 'Signup failed.'
+      return { success: false, message }
+    } finally {
+      setLoading(false)
     }
-
-    const newUser = { id: Date.now(), name, email, password }
-    const updatedUsers = [...storedUsers, newUser]
-    localStorage.setItem('creatorSetuUsers', JSON.stringify(updatedUsers))
-    setCurrentUser({ id: newUser.id, name: newUser.name, email: newUser.email })
-    return { success: true, message: 'Signup successful.' }
   }
 
   const logout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('creatorSetuUser')
     setCurrentUser(null)
   }
 
   const value = useMemo(
-    () => ({ currentUser, login, logout, signup }),
-    [currentUser],
+    () => ({ currentUser, loading, login, logout, signup }),
+    [currentUser, loading],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

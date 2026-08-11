@@ -6,7 +6,6 @@ import HowItWorks from '../components/landing/HowItWorks'
 import FeaturedCreators from '../components/landing/FeaturedCreators'
 import Testimonials from '../components/landing/Testimonials'
 import CTA from '../components/landing/CTA'
-import Footer from '../components/landing/Footer'
 import creators from '../data/creators'
 
 export default function LandingPage() {
@@ -17,7 +16,10 @@ export default function LandingPage() {
     const normalizedSearch = searchTerm.trim().toLowerCase()
 
     return creators.filter((creator) => {
-      const matchesCategory = selectedCategory === 'All' || creator.category === selectedCategory
+      const matchesCategory =
+        selectedCategory === 'All' ||
+        creator.category === selectedCategory
+
       const matchesSearch =
         normalizedSearch.length === 0 ||
         creator.name.toLowerCase().includes(normalizedSearch) ||
@@ -29,15 +31,28 @@ export default function LandingPage() {
   }, [searchTerm, selectedCategory])
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-[#F5F7FA] text-[#0B1324]">
       <Hero />
-      <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-      <Categories selectedCategory={selectedCategory} onSelectCategory={setSelectedCategory} />
+
+      <SearchBar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+      />
+
+      <Categories
+        selectedCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
+      />
+
       <HowItWorks />
-      <FeaturedCreators filteredCreators={filteredCreators} />
+
+      <FeaturedCreators
+        filteredCreators={filteredCreators}
+      />
+
       <Testimonials />
+
       <CTA />
-      <Footer />
     </div>
   )
 }

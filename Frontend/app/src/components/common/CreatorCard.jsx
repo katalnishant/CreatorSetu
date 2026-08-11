@@ -1,44 +1,71 @@
 import { BadgeCheck, MapPin, Star } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 export default function CreatorCard({ creator }) {
   return (
-    <div className="rounded-[1.75rem] border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-slate-950/20">
+    <div className="group rounded-[1.75rem] border border-[#E2E8F0] bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-[#457B9D]/40 hover:shadow-lg">
+
+      {/* Creator information */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <img
             src={creator.image}
             alt={creator.name}
-            className="h-14 w-14 rounded-full border border-white/10 object-cover"
+            className="h-14 w-14 rounded-full border border-[#E2E8F0] object-cover"
           />
+
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-xl font-semibold text-white">{creator.name}</h3>
-              {creator.verified && <BadgeCheck className="h-5 w-5 text-cyan-300" />}
+              <h3 className="text-xl font-semibold text-[#0B1324]">
+                {creator.name}
+              </h3>
+
+              {creator.verified && (
+                <BadgeCheck className="h-5 w-5 text-[#2A9D8F]" />
+              )}
             </div>
-            <p className="mt-1 text-sm text-slate-400">{creator.category}</p>
+
+            <p className="mt-1 text-sm text-[#64748B]">
+              {creator.category}
+            </p>
           </div>
         </div>
-        <span className="rounded-full border border-fuchsia-400/30 bg-fuchsia-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-fuchsia-200">
+
+        {/* Followers */}
+        <span className="rounded-full border border-[#2A9D8F]/30 bg-[#E8F3F1] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#247A70]">
           {creator.followers}
         </span>
       </div>
 
-      <div className="mt-6 flex items-center justify-between rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3">
-        <div className="flex items-center gap-2 text-sm text-slate-300">
-          <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+      {/* Rating + Location */}
+      <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+
+        <div className="flex items-center gap-2 text-sm text-[#334155]">
+          <Star className="h-4 w-4 fill-[#F59E0B] text-[#F59E0B]" />
           {creator.rating.toFixed(1)} / 5.0
         </div>
-        <div className="flex items-center gap-2 text-sm text-slate-400">
-          <MapPin className="h-4 w-4" />
+
+        <div className="flex items-center gap-2 text-sm text-[#64748B]">
+          <MapPin className="h-4 w-4 text-[#457B9D]" />
           {creator.location}
         </div>
+
       </div>
 
-      <div className="mt-6 flex items-center justify-between">
-        <span className="text-sm text-slate-400">{creator.verified ? 'Verified partner' : 'New creator'}</span>
-        <button className="inline-flex items-center rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400/20">
+      {/* Bottom section */}
+      <div className="mt-6 flex items-center justify-between gap-3">
+
+        <span className="text-sm text-[#64748B]">
+          {creator.verified ? 'Verified partner' : 'New creator'}
+        </span>
+
+        <Link
+          to={`/creator/${creator.id}`}
+          className="inline-flex items-center rounded-full border border-[#457B9D]/30 bg-[#457B9D]/10 px-4 py-2 text-sm font-semibold text-[#1D5D82] transition hover:border-[#2A9D8F]/40 hover:bg-[#2A9D8F]/10 hover:text-[#247A70]"
+        >
           View Profile
-        </button>
+        </Link>
+
       </div>
     </div>
   )

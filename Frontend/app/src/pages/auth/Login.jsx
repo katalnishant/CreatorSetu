@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/useAuth'
 
 export default function Login() {
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { login, loading } = useAuth()
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
 
@@ -13,7 +13,7 @@ export default function Login() {
     setFormData((current) => ({ ...current, [name]: value }))
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     setError('')
 
@@ -22,13 +22,13 @@ export default function Login() {
       return
     }
 
-    const result = login(formData.email, formData.password)
+    const result = await login(formData.email, formData.password)
     if (!result.success) {
       setError(result.message)
       return
     }
 
-    navigate('/discover')
+    navigate('/dashboard')
   }
 
   return (
@@ -65,9 +65,10 @@ export default function Login() {
 
           <button
             type="submit"
-            className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 px-6 py-3 text-sm font-semibold text-white"
+            disabled={loading}
+            className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 px-6 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
           >
-            Login
+            {loading ? 'Signing in...' : 'Login'}
           </button>
         </form>
 
