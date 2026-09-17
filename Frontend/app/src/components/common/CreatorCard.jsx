@@ -1,3 +1,4 @@
+import React from "react";
 import { BadgeCheck, MapPin, Star } from 'lucide-react'
 import { Link } from 'react-router-dom'
 

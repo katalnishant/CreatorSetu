@@ -1,3 +1,4 @@
+import React from "react";
 import { Globe2, Send, Sparkles } from 'lucide-react'
 
 const footerLinks = [
