@@ -58,10 +58,13 @@ jobs:
       - run: npm ci
       - run: npm test
 
-  build-and-push:
+    build-and-push:
     needs: [backend-test, frontend-test]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
 
